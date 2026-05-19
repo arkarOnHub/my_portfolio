@@ -83,6 +83,14 @@ export default function HeroSection() {
         } else {
           setHintVisible(true);
         }
+
+        // Fade out typography during the first 30% of the scroll
+        const titleEl = trackEl.querySelector(".hero-title") as HTMLElement;
+        if (titleEl) {
+          const fadeProgress = Math.min(1, self.progress / 0.3);
+          titleEl.style.opacity = (1 - fadeProgress).toString();
+          titleEl.style.transform = `translateY(${fadeProgress * -50}px)`;
+        }
       },
     });
 
@@ -99,6 +107,20 @@ export default function HeroSection() {
       ref={scrollContainerRef}
       style={{ height: "100vh", overflowY: "scroll" }}
     >
+      {/* ── Overlay UI (Navbar) floating glassmorphism ────────────────── */}
+      <div className="fixed top-6 left-1/2 -translate-x-1/2 z-[100] pointer-events-auto">
+        <div className="flex items-center justify-between gap-12 px-8 py-3 rounded-full bg-white/40 backdrop-blur-md border border-neutral-200 shadow-[0_8px_32px_rgba(0,0,0,0.08)] text-black">
+          <h1 className="text-lg font-bold uppercase tracking-widest font-sans">
+            HAK
+          </h1>
+          <nav className="flex gap-8 text-xs uppercase tracking-widest font-mono font-medium">
+            <a href="#home" className="hover:opacity-60 transition-opacity cursor-pointer">Home</a>
+            <a href="#works" className="hover:opacity-60 transition-opacity cursor-pointer">Works</a>
+            <a href="#contact" className="hover:opacity-60 transition-opacity cursor-pointer">Contact</a>
+          </nav>
+        </div>
+      </div>
+
       {/* ── Scroll Track: 300vh tall — the scroll distance ─────────────── */}
       <div
         ref={trackRef}
@@ -110,6 +132,18 @@ export default function HeroSection() {
           ref={pinRef}
           className="hero-canvas-pin"
         >
+          {/* ── Large Typography Overlay ─────────────────────────────────── */}
+          <div className="absolute top-[20%] left-0 w-full px-8 md:px-16 z-40 pointer-events-none mix-blend-exclusion text-white hero-title">
+            <h2 className="text-[4rem] md:text-[8rem] leading-[0.9] font-bold uppercase tracking-tighter mix-blend-difference text-white">
+              Creative<br/>
+              <span className="ml-[10%]">Engineering</span>
+            </h2>
+            <div className="mt-8 ml-[10%] flex gap-4 text-xs font-mono tracking-widest uppercase opacity-70">
+              <p>[01] Hardware</p>
+              <p>[02] Software</p>
+            </div>
+          </div>
+
           {/* ── WebGL Canvas ────────────────────────────────────────────── */}
           <Canvas
             camera={{
