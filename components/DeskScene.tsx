@@ -22,12 +22,14 @@ interface DeskSceneProps {
 // Fine-tune Z_CLOSE and TARGET_CLOSE once you can inspect the GLB in browser.
 //
 const CAM_START_POS  = new THREE.Vector3(0,   1.9,  5.5);
-const CAM_END_POS    = new THREE.Vector3(0.006, 1.08, -0.18);
+const CAM_SCREEN_POS = new THREE.Vector3(0.006, 1.08, -0.18);
+const CAM_END_POS    = new THREE.Vector3(0.006, 1.08, -2.5); // Punched through the white screen into void
 
-const LOOK_START = new THREE.Vector3(0, 1.3, 0);
-const LOOK_END   = new THREE.Vector3(0.006, 1.08, -1);   // punch through
+const LOOK_START   = new THREE.Vector3(0, 1.3, 0);
+const LOOK_SCREEN  = new THREE.Vector3(0.006, 1.08, -1);
+const LOOK_THROUGH = new THREE.Vector3(0.006, 1.08, -5);
 
-// Easing: smooth cubic so the dolly decelerates as it approaches the screen
+// Easing: smooth cubic
 function easeInOutCubic(t: number): number {
   return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 }
@@ -97,19 +99,44 @@ export default function DeskScene({ scrollProgressRef }: DeskSceneProps) {
 
   useFrame(() => {
     const raw = scrollProgressRef.current ?? 0;
-    const t   = easeInOutCubic(Math.max(0, Math.min(1, raw)));
+    
+    // Phase 1: Dolly to Screen (scroll 0.0 -> 0.35)
+    let p1 = Math.max(0, Math.min(1, raw / 0.35));
+    let t1 = easeInOutCubic(p1);
 
-    // Interpolate camera position
-    _pos.current.lerpVectors(CAM_START_POS, CAM_END_POS, t);
-    camera.position.copy(_pos.current);
+    // Phase 2: Lock on screen (0.35 -> 0.65) - slight drift to keep it alive
+    let p2 = Math.max(0, Math.min(1, (raw - 0.35) / 0.3));
+    
+    // Phase 3: Punch through screen (0.65 -> 0.85)
+    let p3 = Math.max(0, Math.min(1, (raw - 0.65) / 0.2));
+    let t3 = easeInOutCubic(p3);
 
-    // Interpolate lookAt target
-    _lookAt.current.lerpVectors(LOOK_START, LOOK_END, t);
-    camera.lookAt(_lookAt.current);
+    if (raw < 0.65) {
+      // Interpolate to screen
+      _pos.current.lerpVectors(CAM_START_POS, CAM_SCREEN_POS, t1);
+      _lookAt.current.lerpVectors(LOOK_START, LOOK_SCREEN, t1);
+      
+      // Inject slight drift during lock phase
+      _pos.current.z -= p2 * 0.05; 
+      
+      camera.position.copy(_pos.current);
+      camera.lookAt(_lookAt.current);
+    } else {
+      // Punch through the screen into the void
+      // We start from where Phase 2 left off
+      const driftZ = CAM_SCREEN_POS.z - 0.05;
+      const startThroughX = _pos.current.set(CAM_SCREEN_POS.x, CAM_SCREEN_POS.y, driftZ);
 
-    // Increase screen glow intensity as camera approaches
+      _pos.current.lerpVectors(startThroughX, CAM_END_POS, t3);
+      _lookAt.current.lerpVectors(LOOK_SCREEN, LOOK_THROUGH, t3);
+      
+      camera.position.copy(_pos.current);
+      camera.lookAt(_lookAt.current);
+    }
+
+    // Adjust screen light intensity based on camera proximity
     if (screenLightRef.current) {
-      screenLightRef.current.intensity = 0.4 + t * 2.2;
+      screenLightRef.current.intensity = 0.4 + t1 * 2.2 - t3 * 2.6; // fades out as we punch through
     }
   });
 

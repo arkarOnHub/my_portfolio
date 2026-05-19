@@ -46,9 +46,10 @@ To achieve pixel-perfect control over complex WebGL rendering, 3D camera tracks,
 
 ### Phase 3: The Canvas (Z-Axis Zoom / Project Tunnel)
 *   **The Movement:** The standard vertical scroll mechanism is overridden. Scrolling acts as an accelerator moving the viewport forward along the Z-axis through an infinite, pure white architectural void. 
-*   **The Content (Hardware & Software Projects Only):** Projects emerge smoothly from the distant white mist, staging alternatingly on the left and right sides of the screen. 
-    *   *Project 01 (Software/AI Architecture):* Emerges as sharp text, morphing cleanly into an elegant, floating floating layout frame. It zooms past the viewer's left side and off-screen.
-    *   *Project 02 (Hardware/Robotics):* Appears on the right. A gorgeously lit, matte-white 3D model of a self-balancing robot floats in mid-air, actively balancing itself using live browser physics/code loops. As the user gets close, moving the mouse smoothly tilts the camera angle around the robot to inspect the hardware geometry.
+*   **The Content (Hardware & Software Projects Only):** Projects emerge smoothly from the distant white mist, staging alternatingly on the left and right sides of the screen.
+    *   *Project 01 (Hardware/Robotics):* Appears on the right. A gorgeously lit, matte-white 3D model of a self-balancing robot floats in mid-air, actively balancing itself using live browser physics/code loops. As the user gets close, moving the mouse smoothly tilts the camera angle around the robot to inspect the hardware geometry.
+    *   *Project 02 (Software/AI Architecture):* Emerges as sharp text, morphing cleanly into an elegant, floating floating layout frame. It zooms past the viewer's left side and off-screen.
+    
 *   **The Mechanics (Lock & Inspect):** When a project panel reaches the screen center foreground, the forward velocity of the scroll dampens/locks into a sweet spot. The user can hover to engage micro-interactions or trigger deep-dive components. A strong intentional scroll unlocks the camera, causing the project to scale up and rush past the viewer to reveal the next.
 
 ### Phase 4: The Arrival (Horizon Drop Finale)

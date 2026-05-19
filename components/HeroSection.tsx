@@ -84,12 +84,38 @@ export default function HeroSection() {
           setHintVisible(true);
         }
 
-        // Fade out typography during the first 30% of the scroll
+        // Fade out Phase 1 typography early on (0% to 15%)
         const titleEl = trackEl.querySelector(".hero-title") as HTMLElement;
         if (titleEl) {
-          const fadeProgress = Math.min(1, self.progress / 0.3);
+          const fadeProgress = Math.min(1, self.progress / 0.15);
           titleEl.style.opacity = (1 - fadeProgress).toString();
           titleEl.style.transform = `translateY(${fadeProgress * -50}px)`;
+        }
+
+        // Phase 2 Bridge Text reveal (35% to 50%) and fade out (65% to 80%)
+        const bridgeEl = trackEl.querySelector(".bridge-text") as HTMLElement;
+        if (bridgeEl) {
+          let bridgeOpacity = 0;
+          let bridgeScale = 0.9;
+          
+          if (self.progress >= 0.35 && self.progress < 0.5) {
+            // Fade in and scale up
+            const p = (self.progress - 0.35) / 0.15;
+            bridgeOpacity = p;
+            bridgeScale = 0.9 + (p * 0.1);
+          } else if (self.progress >= 0.5 && self.progress <= 0.65) {
+            // Hold screen
+            bridgeOpacity = 1;
+            bridgeScale = 1;
+          } else if (self.progress > 0.65 && self.progress <= 0.8) {
+            // Fade out and scale down (punch through)
+            const p = (self.progress - 0.65) / 0.15;
+            bridgeOpacity = 1 - p;
+            bridgeScale = 1 - (p * 0.2);
+          }
+          
+          bridgeEl.style.opacity = bridgeOpacity.toString();
+          bridgeEl.style.transform = `scale(${bridgeScale})`;
         }
       },
     });
@@ -121,18 +147,18 @@ export default function HeroSection() {
         </div>
       </div>
 
-      {/* ── Scroll Track: 300vh tall — the scroll distance ─────────────── */}
+      {/* ── Scroll Track: 500vh tall to encompass Phase 1 & Phase 2 ─────── */}
       <div
         ref={trackRef}
-        className="hero-scroll-track"
-        aria-label="Hero scroll section"
+        className="h-[500vh] relative"
+        aria-label="Hero and Bridge scroll section"
       >
         {/* ── Sticky Canvas Pin ──────────────────────────────────────────── */}
         <div
           ref={pinRef}
           className="hero-canvas-pin"
         >
-          {/* ── Large Typography Overlay ─────────────────────────────────── */}
+          {/* ── Phase 1: Large Typography Overlay ───────────────────────── */}
           <div className="absolute top-[20%] left-0 w-full px-8 md:px-16 z-40 pointer-events-none mix-blend-exclusion text-white hero-title">
             <h2 className="text-[4rem] md:text-[8rem] leading-[0.9] font-bold uppercase tracking-tighter mix-blend-difference text-white">
               Creative<br/>
@@ -142,6 +168,14 @@ export default function HeroSection() {
               <p>[01] Hardware</p>
               <p>[02] Software</p>
             </div>
+          </div>
+
+          {/* ── Phase 2: The Bridge (Introduction) ──────────────────────── */}
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-8 z-30 pointer-events-none bridge-text opacity-0">
+            <p className="text-xl md:text-3xl font-medium max-w-3xl leading-relaxed tracking-wide text-black bg-white/20 backdrop-blur-md rounded-2xl p-8 shadow-2xl">
+              Merging physical hardware with fluid software interfaces. 
+              Creating spatial experiences that transcend traditional web design.
+            </p>
           </div>
 
           {/* ── WebGL Canvas ────────────────────────────────────────────── */}
