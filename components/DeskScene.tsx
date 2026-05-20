@@ -113,8 +113,8 @@ export default function DeskScene({ scrollProgressRef }: DeskSceneProps) {
     const p3 = Math.max(0, Math.min(1, (raw - 0.216) / 0.067));
     const t3 = easeInOutCubic(p3);
 
-    // Phase 4: Tunnel Journey (0.283 -> 1.0)
-    const p4 = Math.max(0, Math.min(1, (raw - 0.283) / 0.717));
+    // Phase 4: Tunnel Journey (0.283 -> 0.90)
+    const p4 = Math.max(0, Math.min(1, (raw - 0.283) / 0.617));
 
     if (raw < 0.216) {
       // Interpolate to screen

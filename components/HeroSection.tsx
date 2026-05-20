@@ -7,6 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
 import DeskScene from "./DeskScene";
 import ScrollHint from "./ScrollHint";
+import ContactSection from "./ContactSection";
 
 // Register GSAP plugin — safe to call multiple times
 gsap.registerPlugin(ScrollTrigger);
@@ -117,6 +118,58 @@ export default function HeroSection() {
           bridgeEl.style.opacity = bridgeOpacity.toString();
           bridgeEl.style.transform = `scale(${bridgeScale})`;
         }
+
+        // Phase 4 The Arrival: 0.84 -> 0.95
+        // Canvas fade out (0.84 -> 0.85)
+        const canvasWrapper = trackEl.querySelector(".canvas-wrapper") as HTMLElement;
+        if (canvasWrapper) {
+          if (self.progress >= 0.84 && self.progress <= 0.85) {
+             const p = (self.progress - 0.84) / 0.01;
+             canvasWrapper.style.opacity = (1 - p).toString();
+          } else if (self.progress > 0.85) {
+             canvasWrapper.style.opacity = "0";
+          } else {
+             canvasWrapper.style.opacity = "1";
+          }
+        }
+
+        // Horizon Line reveal (0.85 -> 0.86)
+        const horizonLine = trackEl.querySelector(".horizon-line") as HTMLElement;
+        if (horizonLine) {
+          if (self.progress >= 0.85 && self.progress <= 0.86) {
+            const p = (self.progress - 0.85) / 0.01;
+            // cubic ease out
+            const easeP = 1 - Math.pow(1 - p, 3);
+            horizonLine.style.transform = `scaleX(${easeP})`;
+            horizonLine.style.opacity = "1";
+          } else if (self.progress > 0.86) {
+            horizonLine.style.transform = "scaleX(1)";
+            // Fade out horizon line as panels fold open
+            if (self.progress > 0.88) {
+               horizonLine.style.opacity = "0";
+            } else {
+               horizonLine.style.opacity = "1";
+            }
+          } else {
+            horizonLine.style.transform = "scaleX(0)";
+            horizonLine.style.opacity = "0";
+          }
+        }
+
+        // Fold animation (0.86 -> 0.95)
+        const foldTop = trackEl.querySelector(".fold-top") as HTMLElement;
+        const foldBottom = trackEl.querySelector(".fold-bottom") as HTMLElement;
+        if (foldTop && foldBottom) {
+          if (self.progress >= 0.86) {
+            const p = Math.min(1, (self.progress - 0.86) / 0.09);
+            // rotate top back (negative rotateX), rotate bottom forward (positive rotateX or inverse)
+            foldTop.style.transform = `rotateX(${p * 90}deg)`;
+            foldBottom.style.transform = `rotateX(${p * -90}deg)`;
+          } else {
+            foldTop.style.transform = `rotateX(0deg)`;
+            foldBottom.style.transform = `rotateX(0deg)`;
+          }
+        }
       },
     });
 
@@ -147,17 +200,33 @@ export default function HeroSection() {
         </div>
       </div>
 
-      {/* ── Scroll Track: 1500vh tall to encompass Phase 1 to Phase 3 ─────── */}
+      {/* ── Scroll Track: 1500vh tall to encompass Phase 1 to Phase 4 ─────── */}
       <div
         ref={trackRef}
         className="h-[1500vh] relative"
-        aria-label="Hero and Bridge scroll section"
+        aria-label="Hero, Bridge, Tunnel, and Arrival section"
       >
         {/* ── Sticky Canvas Pin ──────────────────────────────────────────── */}
         <div
           ref={pinRef}
-          className="hero-canvas-pin"
+          className="hero-canvas-pin perspective-container"
+          style={{ perspective: "1000px" }}
         >
+          {/* ── Contact Section (Underneath everything) ─────────────────── */}
+          <div className="absolute inset-0 z-0">
+             <Suspense fallback={null}>
+               <ContactSection lenisRef={lenisRef} />
+             </Suspense>
+          </div>
+
+          {/* ── Fold Overlays (Top and Bottom halves) ────────────────────── */}
+          {/* Z-10 covers the Contact section. We set transform-origin to the split line */}
+          <div className="absolute top-0 left-0 w-full h-[50%] bg-white z-10 fold-top transform-origin-bottom" style={{ transformOrigin: "bottom center", backfaceVisibility: "hidden" }}></div>
+          <div className="absolute bottom-0 left-0 w-full h-[50%] bg-white z-10 fold-bottom transform-origin-top" style={{ transformOrigin: "top center", backfaceVisibility: "hidden" }}></div>
+
+          {/* ── Horizon Line ──────────────────────────────────────────────── */}
+          <div className="absolute top-[50%] left-0 w-full h-[2px] bg-black z-20 horizon-line -translate-y-1/2 scale-x-0" style={{ transformOrigin: "center" }}></div>
+
           {/* ── Phase 1: Large Typography Overlay ───────────────────────── */}
           <div className="absolute top-[20%] left-0 w-full px-8 md:px-16 z-40 pointer-events-none mix-blend-exclusion text-white hero-title">
             <h2 className="text-[4rem] md:text-[8rem] leading-[0.9] font-bold uppercase tracking-tighter mix-blend-difference text-white">
@@ -179,30 +248,32 @@ export default function HeroSection() {
           </div>
 
           {/* ── WebGL Canvas ────────────────────────────────────────────── */}
-          <Canvas
-            camera={{
-              fov: 45,
-              near: 0.01,
-              far: 100,
-              position: [0, 1.9, 5.5],
-            }}
-            gl={{
-              antialias: true,
-              alpha: false,
-              powerPreference: "high-performance",
-              toneMapping: 2,          // THREE.ACESFilmicToneMapping
-              toneMappingExposure: 1.1,
-            }}
-            shadows
-            style={{ background: "#ffffff" }}
-            dpr={[1, 2]}              // retina on high-DPI, cap at 2x
-          >
-            <color attach="background" args={["#ffffff"]} />
-            <fog attach="fog" args={["#ffffff", 5, 12]} />
-            <Suspense fallback={<SceneLoader />}>
-              <DeskScene scrollProgressRef={scrollProgressRef} />
-            </Suspense>
-          </Canvas>
+          <div className="absolute inset-0 z-20 canvas-wrapper">
+            <Canvas
+              camera={{
+                fov: 45,
+                near: 0.01,
+                far: 100,
+                position: [0, 1.9, 5.5],
+              }}
+              gl={{
+                antialias: true,
+                alpha: false,
+                powerPreference: "high-performance",
+                toneMapping: 2,          // THREE.ACESFilmicToneMapping
+                toneMappingExposure: 1.1,
+              }}
+              shadows
+              style={{ background: "#ffffff" }}
+              dpr={[1, 2]}              // retina on high-DPI, cap at 2x
+            >
+              <color attach="background" args={["#ffffff"]} />
+              <fog attach="fog" args={["#ffffff", 5, 12]} />
+              <Suspense fallback={<SceneLoader />}>
+                <DeskScene scrollProgressRef={scrollProgressRef} />
+              </Suspense>
+            </Canvas>
+          </div>
 
           {/* ── Scroll Hint ─────────────────────────────────────────────── */}
           <ScrollHint visible={hintVisible} />
