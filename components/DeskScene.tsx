@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useEffect, MutableRefObject } from "react";
-import { useGLTF, useProgress } from "@react-three/drei";
+import { useGLTF } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import type { GLTF } from "three-stdlib";
@@ -88,6 +88,8 @@ function DeskModel() {
   return <primitive object={scene} />;
 }
 
+import ProjectTunnel from "./ProjectTunnel";
+
 // ─── Main Scene ──────────────────────────────────────────────────────────────
 export default function DeskScene({ scrollProgressRef }: DeskSceneProps) {
   const { camera } = useThree();
@@ -100,18 +102,21 @@ export default function DeskScene({ scrollProgressRef }: DeskSceneProps) {
   useFrame(() => {
     const raw = scrollProgressRef.current ?? 0;
     
-    // Phase 1: Dolly to Screen (scroll 0.0 -> 0.35)
-    let p1 = Math.max(0, Math.min(1, raw / 0.35));
-    let t1 = easeInOutCubic(p1);
+    // Phase 1: Dolly to Screen (scroll 0.0 -> 0.116)
+    const p1 = Math.max(0, Math.min(1, raw / 0.116));
+    const t1 = easeInOutCubic(p1);
 
-    // Phase 2: Lock on screen (0.35 -> 0.65) - slight drift to keep it alive
-    let p2 = Math.max(0, Math.min(1, (raw - 0.35) / 0.3));
+    // Phase 2: Lock on screen (0.116 -> 0.216) - slight drift to keep it alive
+    const p2 = Math.max(0, Math.min(1, (raw - 0.116) / 0.1));
     
-    // Phase 3: Punch through screen (0.65 -> 0.85)
-    let p3 = Math.max(0, Math.min(1, (raw - 0.65) / 0.2));
-    let t3 = easeInOutCubic(p3);
+    // Phase 3: Punch through screen (0.216 -> 0.283)
+    const p3 = Math.max(0, Math.min(1, (raw - 0.216) / 0.067));
+    const t3 = easeInOutCubic(p3);
 
-    if (raw < 0.65) {
+    // Phase 4: Tunnel Journey (0.283 -> 1.0)
+    const p4 = Math.max(0, Math.min(1, (raw - 0.283) / 0.717));
+
+    if (raw < 0.216) {
       // Interpolate to screen
       _pos.current.lerpVectors(CAM_START_POS, CAM_SCREEN_POS, t1);
       _lookAt.current.lerpVectors(LOOK_START, LOOK_SCREEN, t1);
@@ -130,6 +135,14 @@ export default function DeskScene({ scrollProgressRef }: DeskSceneProps) {
       _pos.current.lerpVectors(startThroughX, CAM_END_POS, t3);
       _lookAt.current.lerpVectors(LOOK_SCREEN, LOOK_THROUGH, t3);
       
+      // Phase 4: Z-Axis Tunnel 
+      // The camera moves from z = -2.5 to z = -50 as p4 goes from 0 to 1
+      if (p4 > 0) {
+         const tunnelZ = -2.5 - (p4 * 47.5);
+         _pos.current.z = tunnelZ;
+         _lookAt.current.z = tunnelZ - 2.5; // Always looking slightly ahead
+      }
+
       camera.position.copy(_pos.current);
       camera.lookAt(_lookAt.current);
     }
@@ -188,6 +201,7 @@ export default function DeskScene({ scrollProgressRef }: DeskSceneProps) {
 
       {/* ── Model ──────────────────────────────────────────────────── */}
       <DeskModel />
+      <ProjectTunnel />
     </>
   );
 }

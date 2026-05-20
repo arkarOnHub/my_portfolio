@@ -84,32 +84,32 @@ export default function HeroSection() {
           setHintVisible(true);
         }
 
-        // Fade out Phase 1 typography early on (0% to 15%)
+        // Fade out Phase 1 typography early on (0% to 5%)
         const titleEl = trackEl.querySelector(".hero-title") as HTMLElement;
         if (titleEl) {
-          const fadeProgress = Math.min(1, self.progress / 0.15);
+          const fadeProgress = Math.min(1, self.progress / 0.05);
           titleEl.style.opacity = (1 - fadeProgress).toString();
           titleEl.style.transform = `translateY(${fadeProgress * -50}px)`;
         }
 
-        // Phase 2 Bridge Text reveal (35% to 50%) and fade out (65% to 80%)
+        // Phase 2 Bridge Text reveal (11.6% to 16.6%) and fade out (21.6% to 26.6%)
         const bridgeEl = trackEl.querySelector(".bridge-text") as HTMLElement;
         if (bridgeEl) {
           let bridgeOpacity = 0;
           let bridgeScale = 0.9;
           
-          if (self.progress >= 0.35 && self.progress < 0.5) {
+          if (self.progress >= 0.116 && self.progress < 0.166) {
             // Fade in and scale up
-            const p = (self.progress - 0.35) / 0.15;
+            const p = (self.progress - 0.116) / 0.05;
             bridgeOpacity = p;
             bridgeScale = 0.9 + (p * 0.1);
-          } else if (self.progress >= 0.5 && self.progress <= 0.65) {
+          } else if (self.progress >= 0.166 && self.progress <= 0.216) {
             // Hold screen
             bridgeOpacity = 1;
             bridgeScale = 1;
-          } else if (self.progress > 0.65 && self.progress <= 0.8) {
+          } else if (self.progress > 0.216 && self.progress <= 0.266) {
             // Fade out and scale down (punch through)
-            const p = (self.progress - 0.65) / 0.15;
+            const p = (self.progress - 0.216) / 0.05;
             bridgeOpacity = 1 - p;
             bridgeScale = 1 - (p * 0.2);
           }
@@ -147,10 +147,10 @@ export default function HeroSection() {
         </div>
       </div>
 
-      {/* ── Scroll Track: 500vh tall to encompass Phase 1 & Phase 2 ─────── */}
+      {/* ── Scroll Track: 1500vh tall to encompass Phase 1 to Phase 3 ─────── */}
       <div
         ref={trackRef}
-        className="h-[500vh] relative"
+        className="h-[1500vh] relative"
         aria-label="Hero and Bridge scroll section"
       >
         {/* ── Sticky Canvas Pin ──────────────────────────────────────────── */}
@@ -161,8 +161,8 @@ export default function HeroSection() {
           {/* ── Phase 1: Large Typography Overlay ───────────────────────── */}
           <div className="absolute top-[20%] left-0 w-full px-8 md:px-16 z-40 pointer-events-none mix-blend-exclusion text-white hero-title">
             <h2 className="text-[4rem] md:text-[8rem] leading-[0.9] font-bold uppercase tracking-tighter mix-blend-difference text-white">
-              Creative<br/>
-              <span className="ml-[10%]">Engineering</span>
+              HTET<br/>
+              <span className="ml-[10%]">ARKAR</span>
             </h2>
             <div className="mt-8 ml-[10%] flex gap-4 text-xs font-mono tracking-widest uppercase opacity-70">
               <p>[01] Hardware</p>
@@ -198,6 +198,7 @@ export default function HeroSection() {
             dpr={[1, 2]}              // retina on high-DPI, cap at 2x
           >
             <color attach="background" args={["#ffffff"]} />
+            <fog attach="fog" args={["#ffffff", 5, 12]} />
             <Suspense fallback={<SceneLoader />}>
               <DeskScene scrollProgressRef={scrollProgressRef} />
             </Suspense>
