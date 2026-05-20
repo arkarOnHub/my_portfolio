@@ -31,7 +31,16 @@ function HardwareProject({
   const groupRef = useRef<THREE.Group>(null!);
   const textRef = useRef<HTMLDivElement>(null!);
   const { scene } = useGLTF(modelPath) as GLTF & { scene: THREE.Group };
-  const { pointer } = useThree();
+  const { pointer, size } = useThree();
+  const isMobile = size.width < 768;
+
+  // On mobile, center the model and move it down.
+  const actualX = isMobile ? 0 : position[0];
+  const actualY = isMobile ? -1.5 : position[1];
+  
+  // On mobile, center the text and move it up.
+  const actualTextX = isMobile ? 0 : textPosition[0];
+  const actualTextY = isMobile ? 3.5 : textPosition[1];
 
   // Clone scene so multiple uses don't share the same exact object (though we only use each once here)
   useEffect(() => {
@@ -54,9 +63,9 @@ function HardwareProject({
     
     // Smooth dampening towards mouse target
     groupRef.current.rotation.x = THREE.MathUtils.lerp(groupRef.current.rotation.x, targetY, 0.05);
-    // Note: We don't lerp Y completely to target because of auto-rotation, 
-    // instead we can add a slight offset based on pointer.x
-    groupRef.current.position.x = THREE.MathUtils.lerp(groupRef.current.position.x, position[0] + pointer.x * 0.5, 0.05);
+    
+    // Pointer offset for position (without doubling base position)
+    groupRef.current.position.x = THREE.MathUtils.lerp(groupRef.current.position.x, pointer.x * 0.5, 0.05);
 
     // Fade text based on distance (matching the fog of 5 to 12)
     const dist = Math.abs(state.camera.position.z - position[2]);
@@ -66,7 +75,7 @@ function HardwareProject({
   });
 
   return (
-    <group position={position}>
+    <group position={[actualX, actualY, position[2]]}>
       {/* The rotating model */}
       <group ref={groupRef} scale={scale}>
         <primitive object={scene} />
@@ -74,14 +83,14 @@ function HardwareProject({
       
       {/* The floating text beside it */}
       <Html
-        position={textPosition}
+        position={[actualTextX, actualTextY, 0]}
         transform
         distanceFactor={4}
         className="pointer-events-none"
       >
         <div 
           ref={textRef} 
-          className="w-[450px] bg-white/40 backdrop-blur-md p-8 border border-neutral-200 rounded-3xl shadow-[0_32px_64px_rgba(0,0,0,0.05)] text-black transition-opacity duration-75"
+          className={`bg-white/40 backdrop-blur-md border border-neutral-200 rounded-3xl shadow-[0_32px_64px_rgba(0,0,0,0.05)] text-black transition-opacity duration-75 ${isMobile ? 'w-[320px] p-6' : 'w-[450px] p-8'}`}
           style={{ opacity: 0 }}
         >
           <h3 className="text-3xl font-bold uppercase tracking-tight mb-3">{title}</h3>
@@ -108,6 +117,12 @@ function SoftwareProject({
   position: [number, number, number];
 }) {
   const textRef = useRef<HTMLDivElement>(null!);
+  const { size } = useThree();
+  const isMobile = size.width < 768;
+
+  // On mobile, center the project
+  const actualX = isMobile ? 0 : position[0];
+  const actualY = isMobile ? 0 : position[1];
 
   useFrame((state) => {
     // Fade text based on distance (matching the fog of 5 to 12)
@@ -118,7 +133,7 @@ function SoftwareProject({
   });
 
   return (
-    <group position={position}>
+    <group position={[actualX, actualY, position[2]]}>
       <Html
         transform
         distanceFactor={4} // Scales the HTML based on camera distance
@@ -126,7 +141,7 @@ function SoftwareProject({
       >
         <div 
           ref={textRef}
-          className="w-[600px] bg-white/40 backdrop-blur-md p-10 border border-neutral-200 rounded-3xl shadow-[0_32px_64px_rgba(0,0,0,0.05)] text-black transition-opacity duration-75"
+          className={`bg-white/40 backdrop-blur-md border border-neutral-200 rounded-3xl shadow-[0_32px_64px_rgba(0,0,0,0.05)] text-black transition-opacity duration-75 ${isMobile ? 'w-[320px] p-6' : 'w-[600px] p-10'}`}
           style={{ opacity: 0 }}
         >
           <h3 className="text-4xl font-bold uppercase tracking-tight mb-4">{title}</h3>
