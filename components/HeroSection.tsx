@@ -133,6 +133,19 @@ export default function HeroSection() {
           }
         }
 
+        const contactLayer = trackEl.querySelector(".contact-layer") as HTMLElement;
+        if (contactLayer) {
+          if (self.progress > 0.8) {
+            contactLayer.style.display = "block";
+            contactLayer.style.opacity = "1";
+            contactLayer.style.pointerEvents = "auto";
+          } else {
+            contactLayer.style.opacity = "0";
+            contactLayer.style.pointerEvents = "none";
+            contactLayer.style.display = "none";
+          }
+        }
+
         // Horizon Line reveal (0.85 -> 0.86)
         const horizonLine = trackEl.querySelector(".horizon-line") as HTMLElement;
         if (horizonLine) {
@@ -232,7 +245,10 @@ export default function HeroSection() {
           style={{ perspective: "1000px" }}
         >
           {/* ── Contact Section (Underneath everything) ─────────────────── */}
-          <div className="absolute inset-0 z-0">
+          <div
+            className="absolute inset-0 z-30 contact-layer pointer-events-none transition-opacity duration-500"
+            style={{ opacity: 0, display: "none" }}
+          >
              <Suspense fallback={null}>
                <ContactSection lenisRef={lenisRef} />
              </Suspense>
@@ -240,11 +256,11 @@ export default function HeroSection() {
 
           {/* ── Fold Overlays (Top and Bottom halves) ────────────────────── */}
           {/* Z-10 covers the Contact section. We set transform-origin to the split line */}
-          <div className="absolute top-0 left-0 w-full h-[50%] bg-white z-10 fold-top transform-origin-bottom" style={{ transformOrigin: "bottom center", backfaceVisibility: "hidden" }}></div>
-          <div className="absolute bottom-0 left-0 w-full h-[50%] bg-white z-10 fold-bottom transform-origin-top" style={{ transformOrigin: "top center", backfaceVisibility: "hidden" }}></div>
+          <div className="absolute top-0 left-0 w-full h-[50%] bg-white z-10 fold-top transform-origin-bottom pointer-events-none" style={{ transformOrigin: "bottom center", backfaceVisibility: "hidden" }}></div>
+          <div className="absolute bottom-0 left-0 w-full h-[50%] bg-white z-10 fold-bottom transform-origin-top pointer-events-none" style={{ transformOrigin: "top center", backfaceVisibility: "hidden" }}></div>
 
           {/* ── Horizon Line ──────────────────────────────────────────────── */}
-          <div className="absolute top-[50%] left-0 w-full h-[2px] bg-black z-20 horizon-line -translate-y-1/2 scale-x-0" style={{ transformOrigin: "center" }}></div>
+          <div className="absolute top-[50%] left-0 w-full h-[2px] bg-black z-20 horizon-line -translate-y-1/2 scale-x-0 pointer-events-none" style={{ transformOrigin: "center" }}></div>
 
           {/* ── Phase 1: Large Typography Overlay ───────────────────────── */}
           <div className="absolute top-[20%] left-0 w-full px-8 md:px-16 z-40 pointer-events-none mix-blend-exclusion text-white hero-title">
@@ -267,7 +283,7 @@ export default function HeroSection() {
           </div>
 
           {/* ── WebGL Canvas ────────────────────────────────────────────── */}
-          <div className="absolute inset-0 z-20 canvas-wrapper">
+          <div className="absolute inset-0 z-20 canvas-wrapper pointer-events-none">
             <Canvas
               camera={{
                 fov: 45,

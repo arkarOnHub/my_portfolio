@@ -9,7 +9,7 @@ export default function ContactSection({ lenisRef }: { lenisRef: any }) {
   };
 
   return (
-    <div className="w-full h-full bg-white flex flex-col items-center justify-center">
+    <div className="w-full h-full bg-white flex flex-col items-center justify-center relative">
       {/* Container for links */}
       <div className="flex flex-col w-full max-w-7xl px-8 md:px-16">
         
@@ -61,9 +61,9 @@ export default function ContactSection({ lenisRef }: { lenisRef: any }) {
       </div>
 
       {/* Replay Button */}
-      <button 
+      <button
         onClick={replay}
-        className="mt-20 px-8 py-4 bg-black text-white text-sm font-mono tracking-widest uppercase hover:bg-neutral-800 transition-colors rounded-full relative z-20 overflow-hidden group"
+        className="absolute bottom-10 md:bottom-14 px-8 py-4 bg-black text-white text-sm font-mono tracking-widest uppercase hover:bg-neutral-800 transition-colors rounded-full z-20 overflow-hidden group"
       >
         <span className="relative z-10">Replay Journey</span>
       </button>
