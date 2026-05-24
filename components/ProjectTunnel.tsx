@@ -51,6 +51,7 @@ function HardwareProject({
     scene.traverse((child) => {
       if (child instanceof THREE.Mesh) {
         child.material = MATTE_WHITE;
+        child.material.transparent = true;
         child.castShadow = true;
         child.receiveShadow = true;
       }
@@ -71,11 +72,25 @@ function HardwareProject({
     // Pointer offset for position (without doubling base position)
     groupRef.current.position.x = THREE.MathUtils.lerp(groupRef.current.position.x, pointer.x * 0.5, 0.05);
 
-    // Fade text based on distance (matching the fog of 5 to 12)
+    // Fade text based on distance (mobile reaches full opacity closer to center)
     const dist = Math.abs(state.camera.position.z - position[2]);
-    let opacity = 1 - (dist - 5) / (12 - 5);
+    const near = isMobile ? 8.5 : 5;
+    const far = isMobile ? 12 : 12;
+    let opacity = 1 - (dist - near) / (far - near);
     opacity = THREE.MathUtils.clamp(opacity, 0, 1);
+
+    // Fade model earlier than text
+    const modelNear = isMobile ? 6.5 : 4;
+    const modelFar = isMobile ? 12 : 12;
+    let modelOpacity = 1 - (dist - modelNear) / (modelFar - modelNear);
+    modelOpacity = THREE.MathUtils.clamp(modelOpacity, 0, 1);
     if (textRef.current) textRef.current.style.opacity = opacity.toString();
+
+    scene.traverse((child) => {
+      if (child instanceof THREE.Mesh) {
+        child.material.opacity = modelOpacity;
+      }
+    });
   });
 
   return (
@@ -115,29 +130,33 @@ function SoftwareProject({
   title,
   description,
   position,
+  mobilePosition,
 }: {
   title: string;
   description: string;
   position: [number, number, number];
+  mobilePosition?: [number, number, number];
 }) {
   const textRef = useRef<HTMLDivElement>(null!);
   const { size } = useThree();
   const isMobile = size.width < 768;
 
-  // On mobile, center the project
-  const actualX = isMobile ? 0 : position[0];
-  const actualY = isMobile ? 0 : position[1];
+  const actualPosition: [number, number, number] = isMobile
+    ? (mobilePosition ?? [0, 0, position[2]])
+    : position;
 
   useFrame((state) => {
-    // Fade text based on distance (matching the fog of 5 to 12)
+    // Fade text based on distance (mobile reaches full opacity closer to center)
     const dist = Math.abs(state.camera.position.z - position[2]);
-    let opacity = 1 - (dist - 5) / (12 - 5);
+    const near = isMobile ? 8.5 : 5;
+    const far = isMobile ? 12 : 12;
+    let opacity = 1 - (dist - near) / (far - near);
     opacity = THREE.MathUtils.clamp(opacity, 0, 1);
     if (textRef.current) textRef.current.style.opacity = opacity.toString();
   });
 
   return (
-    <group position={[actualX, actualY, position[2]]}>
+    <group position={actualPosition}>
       <Html
         transform
         distanceFactor={4} // Scales the HTML based on camera distance
@@ -182,6 +201,7 @@ export default function ProjectTunnel() {
         title="Project 2"
         description="A fluid, high-performance architecture for next-generation web applications. Built with scale and aesthetic purity in mind."
         position={[-2.5, 1, -25]}
+        mobilePosition={[0, 1.3, -25]}
       />
 
       {/* Project 3: Balancing Robot (Right) */}
@@ -199,6 +219,7 @@ export default function ProjectTunnel() {
         title="Project 4"
         description="Generative AI interfaces and spatial computing logic. Bridging the gap between pure data and human-centric design."
         position={[-2.5, 1, -45]}
+        mobilePosition={[0, 1.3, -45]}
       />
     </>
   );
