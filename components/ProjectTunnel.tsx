@@ -20,6 +20,8 @@ function HardwareProject({
   title,
   description,
   textPosition = [-5, 0, 0], // Relative to the group
+  mobilePosition,
+  mobileTextPosition,
 }: {
   modelPath: string;
   position: [number, number, number];
@@ -27,6 +29,8 @@ function HardwareProject({
   title: string;
   description: string;
   textPosition?: [number, number, number];
+  mobilePosition?: [number, number, number];
+  mobileTextPosition?: [number, number, number];
 }) {
   const groupRef = useRef<THREE.Group>(null!);
   const textRef = useRef<HTMLDivElement>(null!);
@@ -34,13 +38,13 @@ function HardwareProject({
   const { pointer, size } = useThree();
   const isMobile = size.width < 768;
 
-  // On mobile, center the model and move it down.
-  const actualX = isMobile ? 0 : position[0];
-  const actualY = isMobile ? -1.5 : position[1];
-  
-  // On mobile, center the text and move it up.
-  const actualTextX = isMobile ? 0 : textPosition[0];
-  const actualTextY = isMobile ? 3.5 : textPosition[1];
+  const actualPosition: [number, number, number] = isMobile
+    ? (mobilePosition ?? [0, -1.5, position[2]])
+    : position;
+
+  const actualTextPosition: [number, number, number] = isMobile
+    ? (mobileTextPosition ?? [0, 3.5, 0])
+    : textPosition;
 
   // Clone scene so multiple uses don't share the same exact object (though we only use each once here)
   useEffect(() => {
@@ -75,7 +79,7 @@ function HardwareProject({
   });
 
   return (
-    <group position={[actualX, actualY, position[2]]}>
+    <group position={actualPosition}>
       {/* The rotating model */}
       <group ref={groupRef} scale={scale}>
         <primitive object={scene} />
@@ -83,7 +87,7 @@ function HardwareProject({
       
       {/* The floating text beside it */}
       <Html
-        position={[actualTextX, actualTextY, 0]}
+        position={actualTextPosition}
         transform
         distanceFactor={4}
         className="pointer-events-none"
@@ -165,7 +169,9 @@ export default function ProjectTunnel() {
       <HardwareProject
         modelPath="/models/robotarm.glb"
         position={[2.5, 1, -15]}
-        scale={0.5} // adjust scale as needed
+        scale={0.75} // adjust scale as needed
+        mobilePosition={[0, -0.5, -15]}
+        mobileTextPosition={[0, 1.8, 0]}
         title="Project 1"
         description="A six-axis robotic arm designed for precision assembly and advanced manufacturing. Complete hardware and software integration."
         textPosition={[-4.5, 0, 0]} // Place text to the left of the model

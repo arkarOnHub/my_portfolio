@@ -180,6 +180,19 @@ export default function HeroSection() {
     };
   }, []);
 
+  // ── Nav scroll helpers ─────────────────────────────────────────────────
+  // The entire experience lives inside a Lenis-controlled scroll container
+  // spanning 1500vh. We calculate pixel offsets as a fraction of total height.
+  const scrollTo = (progress: number) => {
+    const lenis = lenisRef.current;
+    if (!lenis) return;
+    const totalHeight = 1500 * window.innerHeight / 100;
+    lenis.scrollTo(totalHeight * progress, {
+      duration: 1.8,
+      easing: (t: number) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2,
+    });
+  };
+
   return (
     <div
       id="scroll-container"
@@ -188,14 +201,20 @@ export default function HeroSection() {
     >
       {/* ── Overlay UI (Navbar) floating glassmorphism ────────────────── */}
       <div className="fixed top-6 left-1/2 -translate-x-1/2 z-[100] pointer-events-auto">
-        <div className="flex items-center justify-between gap-12 px-8 py-3 rounded-full bg-white/40 backdrop-blur-md border border-neutral-200 shadow-[0_8px_32px_rgba(0,0,0,0.08)] text-black">
-          <h1 className="text-lg font-bold uppercase tracking-widest font-sans">
+        <div
+          className="flex items-center justify-between gap-12 rounded-full bg-white/40 backdrop-blur-md border border-neutral-200 shadow-[0_8px_32px_rgba(0,0,0,0.08)] text-black"
+          style={{ padding: "10px 10px" }}
+        >
+          <h1 className="text-lg font-bold uppercase tracking-widest font-sans ml-8">
             HAK
           </h1>
-          <nav className="flex gap-8 text-xs uppercase tracking-widest font-mono font-medium">
-            <a href="#home" className="hover:opacity-60 transition-opacity cursor-pointer">Home</a>
-            <a href="#works" className="hover:opacity-60 transition-opacity cursor-pointer">Works</a>
-            <a href="#contact" className="hover:opacity-60 transition-opacity cursor-pointer">Contact</a>
+          <nav className="flex gap-8 text-xs uppercase tracking-widest font-mono font-medium mr-8">
+            {/* Home → beginning of scroll track */}
+            <button onClick={() => scrollTo(0)} className="hover:opacity-60 transition-opacity cursor-pointer bg-transparent border-none p-0 font-mono text-xs uppercase tracking-widest font-medium">Home</button>
+            {/* Works → ~30% into scroll track (camera enters tunnel) */}
+            <button onClick={() => scrollTo(0.30)} className="hover:opacity-60 transition-opacity cursor-pointer bg-transparent border-none p-0 font-mono text-xs uppercase tracking-widest font-medium">Works</button>
+            {/* Contact → 90% into scroll track (fold fully open) */}
+            <button onClick={() => scrollTo(0.92)} className="hover:opacity-60 transition-opacity cursor-pointer bg-transparent border-none p-0 font-mono text-xs uppercase tracking-widest font-medium">Contact</button>
           </nav>
         </div>
       </div>
