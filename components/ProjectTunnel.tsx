@@ -79,11 +79,7 @@ function HardwareProject({
     let opacity = 1 - (dist - near) / (far - near);
     opacity = THREE.MathUtils.clamp(opacity, 0, 1);
 
-    // Fade model earlier than text
-    const modelNear = isMobile ? 6.5 : 4;
-    const modelFar = isMobile ? 12 : 12;
-    let modelOpacity = 1 - (dist - modelNear) / (modelFar - modelNear);
-    modelOpacity = THREE.MathUtils.clamp(modelOpacity, 0, 1);
+    const modelOpacity = 1;
     if (textRef.current) textRef.current.style.opacity = opacity.toString();
 
     scene.traverse((child) => {
@@ -188,7 +184,7 @@ export default function ProjectTunnel() {
       <HardwareProject
         modelPath="/models/robotarm.glb"
         position={[2.5, 1, -15]}
-        scale={0.75} // adjust scale as needed
+        scale={0.8} // adjust scale as needed
         mobilePosition={[0, -0.5, -15]}
         mobileTextPosition={[0, 1.8, 0]}
         title="Project 1"
