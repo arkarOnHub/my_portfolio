@@ -20,11 +20,11 @@ export default function ContactSection({ lenisRef }: { lenisRef: any }) {
           rel="noreferrer" 
           className="group relative overflow-hidden w-full py-8 md:py-12 border-b border-neutral-200 cursor-pointer flex items-center justify-between"
         >
-           <div className="absolute inset-0 bg-black translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] z-0 origin-bottom"></div>
-           <h2 className="text-[12vw] md:text-[8vw] font-bold uppercase tracking-tighter text-black group-hover:text-white transition-colors duration-500 relative z-10 leading-none mix-blend-difference">
+           <div className="absolute inset-0 bg-black translate-y-0 md:translate-y-full md:group-hover:translate-y-0 transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] z-0 origin-bottom"></div>
+           <h2 className="text-[12vw] md:text-[8vw] font-bold uppercase tracking-tighter text-white md:text-black md:group-hover:text-white transition-colors duration-500 relative z-10 leading-none mix-blend-difference">
              LINKEDIN
            </h2>
-           <span className="relative z-10 text-black group-hover:text-white transition-colors duration-500 font-mono text-sm tracking-widest uppercase">
+           <span className="relative z-10 text-white md:text-black md:group-hover:text-white transition-colors duration-500 font-mono text-sm tracking-widest uppercase">
              [01] Connect
            </span>
         </a>
@@ -34,11 +34,11 @@ export default function ContactSection({ lenisRef }: { lenisRef: any }) {
           href="mailto:arkar.acc2003@gmail.com" 
           className="group relative overflow-hidden w-full py-8 md:py-12 border-b border-neutral-200 cursor-pointer flex items-center justify-between"
         >
-           <div className="absolute inset-0 bg-black translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] z-0 origin-bottom"></div>
-           <h2 className="text-[12vw] md:text-[8vw] font-bold uppercase tracking-tighter text-black group-hover:text-white transition-colors duration-500 relative z-10 leading-none mix-blend-difference">
+           <div className="absolute inset-0 bg-black translate-y-0 md:translate-y-full md:group-hover:translate-y-0 transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] z-0 origin-bottom"></div>
+           <h2 className="text-[12vw] md:text-[8vw] font-bold uppercase tracking-tighter text-white md:text-black md:group-hover:text-white transition-colors duration-500 relative z-10 leading-none mix-blend-difference">
              EMAIL
            </h2>
-           <span className="relative z-10 text-black group-hover:text-white transition-colors duration-500 font-mono text-sm tracking-widest uppercase">
+           <span className="relative z-10 text-white md:text-black md:group-hover:text-white transition-colors duration-500 font-mono text-sm tracking-widest uppercase">
              [02] Reach Out
            </span>
         </a>
@@ -50,11 +50,11 @@ export default function ContactSection({ lenisRef }: { lenisRef: any }) {
           rel="noreferrer" 
           className="group relative overflow-hidden w-full py-8 md:py-12 border-b border-neutral-200 cursor-pointer flex items-center justify-between"
         >
-           <div className="absolute inset-0 bg-black translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] z-0 origin-bottom"></div>
-           <h2 className="text-[12vw] md:text-[8vw] font-bold uppercase tracking-tighter text-black group-hover:text-white transition-colors duration-500 relative z-10 leading-none mix-blend-difference">
+           <div className="absolute inset-0 bg-black translate-y-0 md:translate-y-full md:group-hover:translate-y-0 transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] z-0 origin-bottom"></div>
+           <h2 className="text-[12vw] md:text-[8vw] font-bold uppercase tracking-tighter text-white md:text-black md:group-hover:text-white transition-colors duration-500 relative z-10 leading-none mix-blend-difference">
              GITHUB
            </h2>
-           <span className="relative z-10 text-black group-hover:text-white transition-colors duration-500 font-mono text-sm tracking-widest uppercase">
+           <span className="relative z-10 text-white md:text-black md:group-hover:text-white transition-colors duration-500 font-mono text-sm tracking-widest uppercase">
              [03] Open Source
            </span>
         </a>
