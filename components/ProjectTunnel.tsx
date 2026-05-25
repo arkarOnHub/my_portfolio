@@ -19,6 +19,7 @@ function HardwareProject({
   scale = 1,
   title,
   description,
+  tags,
   textPosition = [-5, 0, 0], // Relative to the group
   mobilePosition,
   mobileTextPosition,
@@ -28,6 +29,7 @@ function HardwareProject({
   scale?: number;
   title: string;
   description: string;
+  tags?: string[];
   textPosition?: [number, number, number];
   mobilePosition?: [number, number, number];
   mobileTextPosition?: [number, number, number];
@@ -112,6 +114,18 @@ function HardwareProject({
           <p className="text-base text-neutral-600 leading-relaxed">
             {description}
           </p>
+          {tags && tags.length > 0 ? (
+            <div className="mt-4 flex flex-wrap gap-2">
+              {tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="rounded-full border border-neutral-200 bg-white/80 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-neutral-700"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          ) : null}
           <div className="mt-6 flex gap-3">
             <div className="h-2 w-16 bg-neutral-800 rounded-full"></div>
             <div className="h-2 w-4 bg-neutral-300 rounded-full"></div>
@@ -125,11 +139,13 @@ function HardwareProject({
 function SoftwareProject({
   title,
   description,
+  tags,
   position,
   mobilePosition,
 }: {
   title: string;
   description: string;
+  tags?: string[];
   position: [number, number, number];
   mobilePosition?: [number, number, number];
 }) {
@@ -167,6 +183,18 @@ function SoftwareProject({
           <p className="text-lg text-neutral-600 leading-relaxed">
             {description}
           </p>
+          {tags && tags.length > 0 ? (
+            <div className="mt-5 flex flex-wrap gap-2">
+              {tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="rounded-full border border-neutral-200 bg-white/80 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-neutral-700"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          ) : null}
           <div className="mt-8 flex gap-4">
             <div className="h-12 w-32 bg-neutral-100 rounded-full animate-pulse"></div>
             <div className="h-12 w-32 bg-neutral-100 rounded-full animate-pulse delay-75"></div>
@@ -187,15 +215,36 @@ export default function ProjectTunnel() {
         scale={0.8} // adjust scale as needed
         mobilePosition={[0, -0.5, -15]}
         mobileTextPosition={[0, 1.8, 0]}
-        title="Project 1"
-        description="A six-axis robotic arm designed for precision assembly and advanced manufacturing. Complete hardware and software integration."
+        title="Vision-Guided SCARA Chess Mentor"
+        description="Developed a 2DOF SCARA robotic arm integrated with a real-time computer vision pipeline to act as an interactive chess mentor, tracking board states and physically pointing out optimal moves calculated by the Stockfish engine."
+        tags={[
+          "Robotics",
+          "Computer Vision",
+          "Python",
+          "FastAPI",
+          "Arduino",
+          "Inverse Kinematics",
+          "Stockfish",
+          "OpenCV",
+          "SCARA",
+          "AI",
+        ]}
         textPosition={[-4.5, 0, 0]} // Place text to the left of the model
       />
 
       {/* Project 2: Software (Left) */}
       <SoftwareProject
-        title="Project 2"
-        description="A fluid, high-performance architecture for next-generation web applications. Built with scale and aesthetic purity in mind."
+        title="RL-Powered Autonomous Terrain Navigator"
+        description="Developed an AI-powered autonomous navigation system that leverages reinforcement learning and topographical path planning to generate optimized rover trajectories across complex 2D and 3D terrains of Mars."
+        tags={[
+          "Reinforcement Learning",
+          "Path Planning",
+          "Autonomous Navigation",
+          "Robotics",
+          "3D Visualization",
+          "Topography",
+          "Simulation",
+        ]}
         position={[-2.5, 1, -25]}
         mobilePosition={[0, 1.3, -25]}
       />
@@ -205,15 +254,34 @@ export default function ProjectTunnel() {
         modelPath="/models/self_balancing_robot.glb"
         position={[2.5, 1, -35]}
         scale={0.8} // adjust scale as needed
-        title="Project 3"
-        description="A self-balancing inverted pendulum robot leveraging PID control theory and real-time gyro/accelerometer fusion algorithms."
+        title="Self-Balancing Inverted Pendulum Robot"
+        description="Engineered a self-balancing robot based on the inverted pendulum model, integrating an MPU-6050 IMU with Kalman filtering for precise tilt estimation and a tuned PID controller to maintain dynamic stability."
+        tags={[
+          "Feedback Control",
+          "PID Control",
+          "Kalman Filter",
+          "Arduino",
+          "State Space Modeling",
+          "MATLAB",
+          "MPU6050",
+          "Kinematics",
+        ]}
         textPosition={[-4.5, 0, 0]} // Place text to the left of the model
       />
 
       {/* Project 4: Software (Left) */}
       <SoftwareProject
-        title="Project 4"
-        description="Generative AI interfaces and spatial computing logic. Bridging the gap between pure data and human-centric design."
+        title="Budget Buddy: LLM-Driven Finance Assistant"
+        description="Developed an AI-powered personal finance assistant featuring a natural language conversational interface to track spending, manage savings goals, and deliver real-time financial insights."
+        tags={[
+          "Data Science",
+          "LangChain",
+          "LLM",
+          "Pandas",
+          "Data Analytics",
+          "Python",
+          "PostgreSQL",
+        ]}
         position={[-2.5, 1, -45]}
         mobilePosition={[0, 1.3, -45]}
       />

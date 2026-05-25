@@ -15,7 +15,7 @@ export default function ContactSection({ lenisRef }: { lenisRef: any }) {
         
         {/* LINKEDIN */}
         <a 
-          href="https://linkedin.com" 
+          href="https://www.linkedin.com/in/htet-arkar-ai/" 
           target="_blank" 
           rel="noreferrer" 
           className="group relative overflow-hidden w-full py-8 md:py-12 border-b border-neutral-200 cursor-pointer flex items-center justify-between"
@@ -31,7 +31,7 @@ export default function ContactSection({ lenisRef }: { lenisRef: any }) {
 
         {/* EMAIL */}
         <a 
-          href="mailto:hello@example.com" 
+          href="mailto:arkar.acc2003@gmail.com" 
           className="group relative overflow-hidden w-full py-8 md:py-12 border-b border-neutral-200 cursor-pointer flex items-center justify-between"
         >
            <div className="absolute inset-0 bg-black translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] z-0 origin-bottom"></div>
@@ -45,7 +45,7 @@ export default function ContactSection({ lenisRef }: { lenisRef: any }) {
 
         {/* GITHUB */}
         <a 
-          href="https://github.com" 
+          href="https://github.com/arkarOnHub" 
           target="_blank" 
           rel="noreferrer" 
           className="group relative overflow-hidden w-full py-8 md:py-12 border-b border-neutral-200 cursor-pointer flex items-center justify-between"

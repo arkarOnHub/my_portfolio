@@ -264,21 +264,20 @@ export default function HeroSection() {
 
           {/* ── Phase 1: Large Typography Overlay ───────────────────────── */}
           <div className="absolute top-[20%] left-0 w-full px-8 md:px-16 z-40 pointer-events-none mix-blend-exclusion text-white hero-title">
-            <h2 className="text-[4rem] md:text-[8rem] leading-[0.9] font-bold uppercase tracking-tighter mix-blend-difference text-white">
+            <h2 className="text-[4rem] md:text-[18rem] leading-[0.9] font-bold uppercase tracking-tighter mix-blend-difference text-white">
               HTET<br/>
               <span className="ml-[10%]">ARKAR</span>
             </h2>
             <div className="mt-8 ml-[10%] flex gap-4 text-xs font-mono tracking-widest uppercase opacity-70">
-              <p>[01] Hardware</p>
-              <p>[02] Software</p>
+              <p>[01] Software</p>
+              <p>[02] Hardware</p>
             </div>
           </div>
 
           {/* ── Phase 2: The Bridge (Introduction) ──────────────────────── */}
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-8 z-30 pointer-events-none bridge-text opacity-0">
             <p className="text-xl md:text-3xl font-medium max-w-3xl leading-relaxed tracking-wide text-black bg-white/20 backdrop-blur-md rounded-2xl p-8 shadow-2xl">
-              Merging physical hardware with fluid software interfaces. 
-              Creating spatial experiences that transcend traditional web design.
+              I’m a Robotics and AI Engineering student specializing in AI, LLMs, and Autonomous Systems. When I'm not building RAG pipelines or training AI models, I'm likely behind a camera shooting cinematic contents, or optimizing my Push-Pull-Legs routine.
             </p>
           </div>
 
